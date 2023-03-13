@@ -1,0 +1,191 @@
+.header {
+  background: linear-gradient(to right, #3e5151, #decba4);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  .headerContainer {
+    width: 100%;
+    margin: 10px 0px 100px 0px;
+
+    .titleContainer {
+      max-width: 1140px;
+      margin: 0 auto;
+      box-sizing: border-box;
+      font-size: 25px;
+
+      .headerTitle {
+        margin-left: 16px;
+      }
+
+      .headerDescription {
+        margin-left: 16px;
+        margin-bottom: 20px;
+      }
+    }
+
+    .searchBarContainer {
+      max-width: 1140px;
+      margin: 0 auto;
+      box-sizing: border-box;
+    }
+
+    .headerSearch {
+      display: flex;
+      justify-content: space-between;
+      border: 3px solid #588585;
+      height: 30px;
+      width: 100%;
+      max-width: 1140px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0px 5px 10px 0px (rgba(0, 0, 0, 0.3));
+      padding: 10px 0px;
+      position: absolute;
+      bottom: -25px;
+
+      .headerSearchItem {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-left: 10px;
+
+        .headerIcon {
+          color: #a8a8a8;
+        }
+
+        input {
+          width: 100%;
+          color: #8d8d8d;
+          border: none;
+          outline: none;
+        }
+
+        .headerSearchText {
+          width: 100%;
+          color: #a8a8a8;
+          cursor: pointer;
+        }
+
+        .calendar {
+          border: 1px solid #588585;
+          position: absolute;
+          top: 50px;
+          z-index: 2;
+        }
+
+        .guestOptionsMenu {
+          position: absolute;
+          top: 50px;
+          background-color: #fff;
+          color: #a8a8a8;
+          border: 2px solid #588585;
+          border-radius: 5px;
+          box-shadow: 0px 0px 10px -5px (rgba(0, 0, 0, 0.4));
+          z-index: 2;
+
+          .guestOptionItem {
+            width: 200px;
+            margin: 10px;
+            display: flex;
+            justify-content: space-between;
+
+            .counterContainer {
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              font-size: 12px;
+              color: #a8a8a8;
+
+              .counterButton {
+                width: 30px;
+                height: 30px;
+                border: 1px solid #588585;
+                color: #a8a8a8;
+                background-color: #fff;
+                cursor: pointer;
+                transition: all 100ms ease-in-out;
+
+                &:hover {
+                  background-color: #5885857f;
+                  color: #fff;
+                }
+
+                &:active {
+                  transform: translateY(1px);
+                }
+
+                &:disabled {
+                  cursor: not-allowed;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .headerSearchItemButton {
+        margin-right: 2px;
+        align-self: center;
+
+        .headerSearchButton {
+          color: white;
+          font-weight: 500;
+          border: none;
+          padding: 15px 20px;
+          background-color: #decba4;
+          transition: all 100ms ease-in-out;
+
+          &:hover {
+            cursor: pointer;
+            background-color: #debb75;
+          }
+
+          &:active {
+            transform: translateY(1px);
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .headerSearch {
+    border-top: 3px solid #588585 !important;
+    border-left: none !important;
+    border-right: none !important;
+    box-sizing: border-box;
+    flex-direction: column;
+    margin-bottom: 50px;
+
+    .headerSearchItem {
+      border-bottom: 3px solid #588585;
+      background-color: #fff;
+      width: 100%;
+      margin: 0 !important;
+
+      .headerSearchText {
+        margin: 10px;
+      }
+
+      .calendar {
+        margin-top: 25px;
+      }
+
+      .guestOptionsMenu {
+        margin-top: 65px;
+      }
+    }
+
+    .headerSearchItemButton {
+      width: 100%;
+      border-bottom: 4px solid #588585;
+    }
+
+    .headerSearchButton {
+      width: 100%;
+    }
+  }
+}

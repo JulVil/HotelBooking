@@ -25,6 +25,29 @@
           letter-spacing: 0.8px;
           padding: 8px 16px;
         }
+
+        .user {
+          margin-top: 25px;
+
+          .logoutButton {
+            margin-left: 20px;
+            border: none;
+            padding: 10px 15px 10px 15px;
+            cursor: pointer;
+            color: #588585;
+            transition: all 100ms ease-in-out;
+
+            &:hover {
+              background-color: #6ba3a3;
+              color: #fff;
+            }
+
+            &:active {
+              transform: translateY(1px);
+            }
+          }
+        }
+
         .navItems {
           margin-top: 25px;
 
@@ -33,7 +56,17 @@
             border: none;
             padding: 10px 15px 10px 15px;
             cursor: pointer;
-            color: #3e5151d8;
+            color: #588585;
+            transition: all 100ms ease-in-out;
+
+            &:hover {
+              background-color: #6ba3a3;
+              color: #fff;
+            }
+
+            &:active {
+              transform: translateY(1px);
+            }
           }
         }
       }
@@ -62,7 +95,7 @@
             padding: 10px;
           }
 
-          &:hover{
+          &:hover {
             border-radius: 20px;
             background-color: #ffffff3f;
           }

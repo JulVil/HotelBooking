@@ -6,7 +6,10 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { useState } from 'react';
+import useFetch from '../../hooks/useFetch';
+import { useContext, useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { SearchContext } from '../../context/searchContext';
 
 const photos = [
   {
@@ -32,6 +35,35 @@ const photos = [
 const HotelSingle = () => {
   const [slideIndex, setSlideIndex] = useState(0);
   const [openSlider, setOpenSlider] = useState(false);
+  const location = useLocation();
+  const id = location.pathname.split('/')[2];
+
+  const { dates, options } = useContext(SearchContext);
+
+  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+
+  function dayDifference(date1, date2) {
+    if (
+      !date1 ||
+      !date2 ||
+      !(date1 instanceof Date) ||
+      !(date2 instanceof Date)
+    ) {
+      const storedDates = localStorage.getItem('dates');
+      return storedDates ? JSON.parse(storedDates) : null;
+    }
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(timeDiff / MILLISECONDS_PER_DAY);
+    return diffDays;
+  }
+
+  const stayDays = dayDifference(dates[0]?.endDate, dates[0]?.startDate);
+
+  useEffect(() => {
+    localStorage.setItem('dates', JSON.stringify(stayDays));
+  }, [stayDays]);
+
+  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
 
   const handleSliders = (index) => {
     setSlideIndex(index);
@@ -54,88 +86,84 @@ const HotelSingle = () => {
   return (
     <div>
       <Navbar />
-      <div className='singleHotelContainer'>
-        {openSlider && (
-          <div className='imageSlider'>
-            <CancelIcon
-              className='sliderCloseButton'
-              onClick={() => setOpenSlider(false)}
-            />
-            <ArrowCircleLeftIcon
-              className='sliderArrow'
-              onClick={() => handleSliderMove('left')}
-            />
-            <div className='imageSliderWrapper'>
-              <img
-                src={photos[slideIndex].src}
-                alt='Property'
-                className='sliderImage'
+      {loading ? (
+        'Loading please wait'
+      ) : error ? (
+        (console.log(error), `Can't get hotel info, please try again later`)
+      ) : (
+        <div className='singleHotelContainer'>
+          {openSlider && (
+            <div className='imageSlider'>
+              <CancelIcon
+                className='sliderCloseButton'
+                onClick={() => setOpenSlider(false)}
               />
-            </div>
-            <ArrowCircleRightIcon
-              className='sliderArrow'
-              onClick={() => handleSliderMove('right')}
-            />
-          </div>
-        )}
-        <div className='singleHotelWrapper'>
-          <button className='bookNowButton'>Reserve or Book Now!</button>
-          <h1 className='singleHotelTitle'>Tower Street Apartments</h1>
-          <div className='singleHotelAddress'>
-            <LocationOnIcon />
-            <span>Elton St 125 New York</span>
-          </div>
-          <span className='singleHotelDistance'>
-            Excellent location - 500m from center
-          </span>
-          <span className='singleHotelPriceHighlight'>
-            Book a stay over $114 at this property and get a free airport taxi
-          </span>
-          <div className='singleHotelImages'>
-            {photos.map((photo, index) => (
-              <div className='singleHotelImgWrapper' key={index}>
+              <ArrowCircleLeftIcon
+                className='sliderArrow'
+                onClick={() => handleSliderMove('left')}
+              />
+              <div className='imageSliderWrapper'>
                 <img
-                  onClick={() => handleSliders(index)}
-                  src={photo.src}
+                  src={data.photos[slideIndex]}
                   alt='Property'
-                  className='singleHotelImg'
+                  className='sliderImage'
                 />
               </div>
-            ))}
-          </div>
-          <div className='singleHotelDetails'>
-            <div className='singleHotelDetailsTexts'>
-              <h1 className='singleHotelTitle'>Stay in the heart of City</h1>
-              <p className='singleHotelDescription'>
-                Located a 5-minute walk from St. Florian's Gate in Krakow, Tower
-                Street Apartments has accommodations with air conditioning and
-                free WiFi. The units come with hardwood floors and feature a
-                fully equipped kitchenette with a microwave, a flat-screen TV,
-                and a private bathroom with shower and a hairdryer. A fridge is
-                also offered, as well as an electric tea pot and a coffee
-                machine. Popular points of interest near the apartment include
-                Cloth Hall, Main Market Square and Town Hall Tower. The nearest
-                airport is John Paul II International Kraków-Balice, 16.1 km
-                from Tower Street Apartments, and the property offers a paid
-                airport shuttle service.
-              </p>
+              <ArrowCircleRightIcon
+                className='sliderArrow'
+                onClick={() => handleSliderMove('right')}
+              />
             </div>
-            <div className='singleHotelDetailsPrice'>
-              <h1>Perfect for a 9-night stay!</h1>
-              <span>
-                located in the real heart of Krakow, this property has an
-                excellent location socre of 9.8!
-              </span>
-              <h2>
-                <b>$945</b> (9 nights)
-              </h2>
-              <button>Reserve of Book now!</button>
+          )}
+          <div className='singleHotelWrapper'>
+            <button className='bookNowButton'>Reserve or Book Now!</button>
+            <h1 className='singleHotelTitle'>{data.name}</h1>
+            <div className='singleHotelAddress'>
+              <LocationOnIcon />
+              <span>{data.address}</span>
+            </div>
+            <span className='singleHotelDistance'>
+              Excellent location - {data.distance}m from center
+            </span>
+            <span className='singleHotelPriceHighlight'>
+              Book a stay over ${data.cheapestPrice} at this property and get a
+              free airport taxi
+            </span>
+            <div className='singleHotelImages'>
+              {data.photos?.map((photo, index) => (
+                <div className='singleHotelImgWrapper' key={index}>
+                  <img
+                    onClick={() => handleSliders(index)}
+                    src={photo}
+                    alt='Property'
+                    className='singleHotelImg'
+                  />
+                </div>
+              ))}
+            </div>
+            <div className='singleHotelDetails'>
+              <div className='singleHotelDetailsTexts'>
+                <h1 className='singleHotelTitle'>{data.title}</h1>
+                <p className='singleHotelDescription'>{data.description}</p>
+              </div>
+              <div className='singleHotelDetailsPrice'>
+                <h1>Perfect for a {stayDays}-night stay!</h1>
+                <span>
+                  located in the real heart of {data.city}, this property has an
+                  excellent location score of 9.8!
+                </span>
+                <h2>
+                  <b>${stayDays * data.cheapestPrice * options.room}</b> (
+                  {stayDays} nights, {options.room} rooms)
+                </h2>
+                <button>Reserve of Book now!</button>
+              </div>
             </div>
           </div>
+          <Newsletter />
+          <Footer />
         </div>
-        <Newsletter />
-        <Footer />
-      </div>
+      )}
     </div>
   );
 };

@@ -5,14 +5,21 @@ import { useState } from 'react';
 import { format } from 'date-fns';
 import { DateRange } from 'react-date-range';
 import SearchItem from '../../components/searchItem/SearchItem';
+import useFetch from '../../hooks/useFetch';
 
 const List = () => {
   const location = useLocation();
   const [destination, setDestination] = useState(location.state.destination);
-  const [date, setDate] = useState(location.state.date);
+  const [dates, setDates] = useState(location.state.dates);
   const [guestOptions, setGuestOptions] = useState(location.state.guestOptions);
   const [openGuestOptions, setOpenGuestOptions] = useState(false);
   const [openDate, setOpenDate] = useState(false);
+  const [min, setMin] = useState(undefined);
+  const [max, setMax] = useState(undefined);
+
+  const { data, loading, error, reFetch } = useFetch(
+    `/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`
+  );
 
   const handleOptionCounter = (name, operation) => {
     setGuestOptions((previous) => {
@@ -24,6 +31,10 @@ const List = () => {
             : guestOptions[name] - 1,
       };
     });
+  };
+
+  const handleListSearch = () => {
+    reFetch();
   };
 
   return (
@@ -45,16 +56,16 @@ const List = () => {
             <div className='searchItem'>
               <label htmlFor='searchDate'>Check-in Date</label>
               <span id='searchDate' onClick={() => setOpenDate(!openDate)}>
-                {`${format(date[0].startDate, 'dd/MM/yyyy')} to ${format(
-                  date[0].endDate,
+                {`${format(dates[0].startDate, 'dd/MM/yyyy')} to ${format(
+                  dates[0].endDate,
                   'dd/MM/yyyy'
                 )}`}
               </span>
               {openDate && (
                 <DateRange
-                  onChange={(item) => setDate([item.selection])}
+                  onChange={(item) => setDates([item.selection])}
                   moveRangeOnFirstSelection={false}
-                  ranges={date}
+                  ranges={dates}
                   minDate={new Date()}
                   className='calendar'
                 />
@@ -139,9 +150,10 @@ const List = () => {
               <div className='searchOptions'>
                 <div className='searchOptionItem'>
                   <span className='searchOptionText'>
-                    Max price <small>{'(per night)'}</small>
+                    Min price <small>{'(per night)'}</small>
                   </span>
                   <input
+                    onChange={(event) => setMin(event.target.value)}
                     type='number'
                     min={0}
                     placeholder='0'
@@ -150,9 +162,10 @@ const List = () => {
                 </div>
                 <div className='searchOptionItem'>
                   <span className='searchOptionText'>
-                    Min price <small>{'(per night)'}</small>
+                    Max price <small>{'(per night)'}</small>
                   </span>
                   <input
+                    onChange={(event) => setMax(event.target.value)}
                     type='number'
                     min={0}
                     placeholder='0'
@@ -161,17 +174,23 @@ const List = () => {
                 </div>
               </div>
             </div>
-            <button className='listSearchButton'>Search</button>
+            <button onClick={handleListSearch} className='listSearchButton'>
+              Search
+            </button>
           </div>
           <div className='listResult'>
-            <SearchItem />
-            <SearchItem />
-            <SearchItem />
-            <SearchItem />
-            <SearchItem />
-            <SearchItem />
-            <SearchItem />
-            <SearchItem />
+            {loading ? (
+              'Loading please wait'
+            ) : error ? (
+              (console.log(error),
+              `Can't get search results, please try again later`)
+            ) : (
+              <>
+                {data.map((item) => {
+                  return <SearchItem item={item} key={item._id} />;
+                })}
+              </>
+            )}
           </div>
         </div>
       </div>

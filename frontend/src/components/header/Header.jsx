@@ -6,13 +6,14 @@ import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import { format } from 'date-fns';
 import { DateRange } from 'react-date-range';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SearchContext } from '../../context/searchContext';
 
 const Header = () => {
   const [destination, setDestination] = useState('');
   const [openDate, setOpenDate] = useState(false);
-  const [date, setDate] = useState([
+  const [dates, setDates] = useState([
     {
       startDate: new Date(),
       endDate: new Date(),
@@ -25,6 +26,8 @@ const Header = () => {
     children: 0,
     room: 1,
   });
+
+  const { dispatch } = useContext(SearchContext);
 
   const navigate = useNavigate();
 
@@ -45,10 +48,21 @@ const Header = () => {
   };
 
   const handleSearch = () => {
-    // if (destination.length === 0) {
-    //   alert('Please enter a value');
-    // } else 
-    navigate('/hotels', { state: { destination, date, guestOptions } });
+    const startDate = dates[0].startDate;
+    const endDate = dates[0].endDate;
+    const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+
+    if (startDate === endDate) {
+      alert('Please select two different dates.');
+    } else if (Math.abs(endDate - startDate) < MILLISECONDS_PER_DAY) {
+      alert('Please select a range of at least two days.');
+    } else {
+      dispatch({
+        type: 'NEW_SEARCH',
+        payload: { destination, dates, options: guestOptions },
+      });
+      navigate('/hotels', { state: { destination, dates, guestOptions } });
+    }
   };
 
   return (
@@ -76,16 +90,16 @@ const Header = () => {
               <span
                 onClick={() => setOpenDate(!openDate)}
                 className='headerSearchText'>
-                {`${format(date[0].startDate, 'dd/MM/yyyy')} to ${format(
-                  date[0].endDate,
+                {`${format(dates[0].startDate, 'dd/MM/yyyy')} to ${format(
+                  dates[0].endDate,
                   'dd/MM/yyyy'
                 )}`}
               </span>
               {openDate && (
                 <DateRange
-                  onChange={(item) => setDate([item.selection])}
+                  onChange={(item) => setDates([item.selection])}
                   moveRangeOnFirstSelection={false}
-                  ranges={date}
+                  ranges={dates}
                   minDate={new Date()}
                   className='calendar'
                 />

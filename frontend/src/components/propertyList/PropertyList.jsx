@@ -15,7 +15,7 @@ const PropertyList = () => {
   return (
     <div className='property'>
       {loading ? (
-        'Loading please wait'
+        'Loading, please wait'
       ) : error ? (
         (console.log(error), `Can't get Property List, please try again later`)
       ) : (

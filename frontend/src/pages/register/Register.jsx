@@ -2,17 +2,18 @@ import axios from 'axios';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/authContext';
-import './login.scss';
+import './register.scss';
 
-const Login = () => {
+const Register = () => {
   const [credentials, setCredentials] = useState({
     username: undefined,
+    email: undefined,
     password: undefined,
   });
 
-  const { loading, error, dispatch } = useContext(AuthContext);
-
   const navigate = useNavigate();
+
+  const { loading, error, dispatch } = useContext(AuthContext);
 
   const handleInput = (event) => {
     setCredentials((prev) => ({
@@ -20,12 +21,12 @@ const Login = () => {
       [event.target.id]: event.target.value,
     }));
   };
-
-  const handleLogin = async (event) => {
+  
+  const handleRegister = async (event) => {
     event.preventDefault();
     dispatch({ type: 'LOGIN_START' });
     try {
-      const res = await axios.post('/authentication/login', credentials);
+      const res = await axios.post('/authentication/register', credentials);
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
       if (window.history.state && window.history.state.idx > 0) {
         navigate(-1);
@@ -35,31 +36,38 @@ const Login = () => {
       }
     } catch (error) {
       dispatch({ type: 'LOGIN_FAILURE', payload: error.response.data });
-      console.log(error.response.data)
     }
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') handleLogin(event);
+    if (event.key === 'Enter') handleRegister(event);
   };
 
   return (
-    <div className='login'>
-      <div className='loginContainer'>
+    <div className='register'>
+      <div className='registerContainer'>
         <h1 className='logo'>NOTBOOKING</h1>
-        <div className='loginCard'>
-          <h2>Welcome! Please sign in</h2>
+        <div className='registerCard'>
+          <h2>Create a free account</h2>
           <input
             type='text'
-            className='loginInput'
+            className='registerInput'
             id='username'
             placeholder='username'
             onKeyDown={handleKeyDown}
             onChange={handleInput}
           />
           <input
+            type='email'
+            className='registerInput'
+            id='email'
+            placeholder='email'
+            onKeyDown={handleKeyDown}
+            onChange={handleInput}
+          />
+          <input
             type='password'
-            className='loginInput'
+            className='registerInput'
             id='password'
             placeholder='password'
             onKeyDown={handleKeyDown}
@@ -67,9 +75,9 @@ const Login = () => {
           />
           <button
             disabled={loading}
-            onClick={handleLogin}
-            className='loginButton'>
-            Login
+            onClick={handleRegister}
+            className='registerButton'>
+            Register
           </button>
           {error && <span>{error.message}</span>}
         </div>
@@ -78,4 +86,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

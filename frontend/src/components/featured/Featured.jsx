@@ -9,7 +9,7 @@ const Featured = () => {
   return (
     <div className='featured'>
       {loading ? (
-        'Loading please wait'
+        'Loading, please wait'
       ) : error ? (
         (console.log(error),
         `Can't get featuerd cities, please try again later`)

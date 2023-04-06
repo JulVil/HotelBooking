@@ -17,6 +17,14 @@ const Navbar = () => {
     navigate('/login');
   };
 
+  const handleRegister = () => {
+    navigate('/register');
+  };
+
+  const handleProfile = () => {
+    navigate('/profile');
+  }
+
   const handleLogout = () => {
     localStorage.removeItem('user');
     window.location.reload();
@@ -33,13 +41,18 @@ const Navbar = () => {
             {user ? (
               <div className='user'>
                 <span>{user.username}</span>
-                <button className='logoutButton' onClick={handleLogout}>
+                <button className='userButton' onClick={handleProfile}>
+                  Profile
+                </button>
+                <button className='userButton' onClick={handleLogout}>
                   Logout
                 </button>
               </div>
             ) : (
               <div className='navItems'>
-                <button className='navButton'>Register</button>
+                <button className='navButton' onClick={handleRegister}>
+                  Register
+                </button>
                 <button className='navButton' onClick={handleLogin}>
                   Sign in
                 </button>

@@ -1,0 +1,89 @@
+.bookRooms {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .bookRoomsContainer {
+    background-color: #fff;
+    padding: 20px;
+    position: relative;
+
+    .roomsClose {
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .room {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 50px;
+      padding: 20px;
+
+      .roomInfo {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+
+        .roomTitle {
+          font-weight: 500;
+        }
+
+        .roomDescription {
+          font-weight: 300;
+        }
+
+        .roomMaxPeople {
+          font-weight: 400;
+        }
+
+        .roomPrice {
+          font-weight: 500;
+        }
+      }
+
+      .selectedRooms {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        font-size: 12px;
+        color: #999;
+
+        .roomNumbers {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    }
+
+    .reserveButton {
+      width: 100%;
+      padding: 10px 20px;
+      background-color: #588585;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: all 100ms ease-in-out;
+
+      &:hover {
+        background-color: #6ba3a3;
+      }
+
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+  }
+}

@@ -8,8 +8,10 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import CancelIcon from '@mui/icons-material/Cancel';
 import useFetch from '../../hooks/useFetch';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SearchContext } from '../../context/searchContext';
+import { AuthContext } from '../../context/authContext';
+import BookRooms from '../../components/bookRooms/BookRooms';
 
 const photos = [
   {
@@ -35,12 +37,17 @@ const photos = [
 const HotelSingle = () => {
   const [slideIndex, setSlideIndex] = useState(0);
   const [openSlider, setOpenSlider] = useState(false);
+  const [openRooms, setOpenRooms] = useState(false);
   const location = useLocation();
   const id = location.pathname.split('/')[2];
+  const navigate = useNavigate();
 
+  const { user } = useContext(AuthContext);
   const { dates, options } = useContext(SearchContext);
+  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
 
   const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+  const stayDays = dayDifference(dates[0]?.endDate, dates[0]?.startDate);
 
   function dayDifference(date1, date2) {
     if (
@@ -57,13 +64,9 @@ const HotelSingle = () => {
     return diffDays;
   }
 
-  const stayDays = dayDifference(dates[0]?.endDate, dates[0]?.startDate);
-
   useEffect(() => {
     localStorage.setItem('dates', JSON.stringify(stayDays));
   }, [stayDays]);
-
-  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
 
   const handleSliders = (index) => {
     setSlideIndex(index);
@@ -83,11 +86,19 @@ const HotelSingle = () => {
     setSlideIndex(newSlideIndex);
   };
 
+  const handleReserve = () => {
+    if (user) {
+      setOpenRooms(true);
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <div>
       <Navbar />
       {loading ? (
-        'Loading please wait'
+        'Loading, please wait'
       ) : error ? (
         (console.log(error), `Can't get hotel info, please try again later`)
       ) : (
@@ -116,7 +127,9 @@ const HotelSingle = () => {
             </div>
           )}
           <div className='singleHotelWrapper'>
-            <button className='bookNowButton'>Reserve or Book Now!</button>
+            <button className='bookNowButton' onClick={handleReserve}>
+              Reserve or Book Now!
+            </button>
             <h1 className='singleHotelTitle'>{data.name}</h1>
             <div className='singleHotelAddress'>
               <LocationOnIcon />
@@ -156,7 +169,7 @@ const HotelSingle = () => {
                   <b>${stayDays * data.cheapestPrice * options.room}</b> (
                   {stayDays} nights, {options.room} rooms)
                 </h2>
-                <button>Reserve of Book now!</button>
+                <button onClick={handleReserve}>Reserve of Book now!</button>
               </div>
             </div>
           </div>
@@ -164,6 +177,7 @@ const HotelSingle = () => {
           <Footer />
         </div>
       )}
+      {openRooms && <BookRooms setOpenRooms={setOpenRooms} hotelId={id} />}
     </div>
   );
 };

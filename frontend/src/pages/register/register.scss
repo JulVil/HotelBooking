@@ -1,13 +1,14 @@
-.login {
+.register {
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
 
-  .loginContainer {
+  .registerContainer {
     text-align: center;
-    .loginCard {
+
+    .registerCard {
       color: #588585;
       display: flex;
       flex-direction: column;
@@ -18,12 +19,12 @@
       background-color: #efdab1b1;
       text-align: center;
 
-      .loginInput {
+      .registerInput {
         height: 30px;
         padding: 10px;
       }
 
-      .loginButton {
+      .registerButton {
         padding: 10px 20px;
         color: #fff;
         background-color: #588585;

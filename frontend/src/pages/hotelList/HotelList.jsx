@@ -180,7 +180,7 @@ const List = () => {
           </div>
           <div className='listResult'>
             {loading ? (
-              'Loading please wait'
+              'Loading, please wait'
             ) : error ? (
               (console.log(error),
               `Can't get search results, please try again later`)

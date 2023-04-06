@@ -7,7 +7,7 @@ const FeaturedProperty = () => {
   return (
     <div className='featuredProperty'>
       {loading ? (
-        'Loading please wait'
+        'Loading, please wait'
       ) : error ? (
         (console.log(error),
         `Can't get Rated Properties, please try again later`)

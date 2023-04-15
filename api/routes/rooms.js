@@ -8,15 +8,18 @@ import {
   updateRoom,
   updateRoomAvailability,
 } from '../controllers/roomControl.js';
-import { verifyAdmin } from '../utils/verifyToken.js';
+// import { verifyAdmin } from '../utils/verifyToken.js';
 
 const router = express.Router();
 
+// render is on the public suffixes list, which means cross site cookies won't work.
+// so verification with tokens is not possible at the moment
+
 //CREATE ROOM
-router.post('/:hotelid', verifyAdmin, createRoom);
+router.post('/:hotelid', /*verifyAdmin,*/ createRoom);
 
 //UPDATE ROOM
-router.put('/:id', verifyAdmin, updateRoom);
+router.put('/:id', /*verifyAdmin,*/ updateRoom);
 
 //UPDATE AVAILABILITY
 router.put('/availability/:id', updateRoomAvailability);
@@ -25,7 +28,7 @@ router.put('/availability/:id', updateRoomAvailability);
 router.get('/roomType/:id', getRoomType);
 
 //DELETE ROOM
-router.delete('/:id/:hotelid', verifyAdmin, deleteRoom);
+router.delete('/:id/:hotelid', /*verifyAdmin,*/ deleteRoom);
 
 //GET ROOM
 router.get('/:id', getRoom);

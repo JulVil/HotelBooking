@@ -16,7 +16,7 @@ const connect = async () => {
     await mongoose.connect(process.env.MONGO);
     console.log('Connected to mongoDB');
   } catch (error) {
-    throw error;
+    console.log(error);
   }
 };
 
@@ -28,7 +28,6 @@ mongoose.connection.on('disconnected', () => {
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:3000',
   credentials: true
 }));
 

@@ -44,7 +44,7 @@ const HotelSingle = () => {
 
   const { user } = useContext(AuthContext);
   const { dates, options } = useContext(SearchContext);
-  const { data, loading, error } = useFetch(`/hotels/find/${id}`);
+  const { data, loading, error } = useFetch(`https://notbooking.onrender.com/api/hotels/find/${id}`);
 
   const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
   const stayDays = dayDifference(dates[0]?.endDate, dates[0]?.startDate);

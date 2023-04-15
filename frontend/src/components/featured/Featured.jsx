@@ -3,7 +3,7 @@ import './featured.scss';
 
 const Featured = () => {
   const { data, loading, error } = useFetch(
-    '/hotels/countByCity?cities=dublin,helsinki,ibiza'
+    'https://notbooking.onrender.com/api/hotels/countByCity?cities=dublin,helsinki,ibiza'
   );
 
   return (

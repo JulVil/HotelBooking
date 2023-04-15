@@ -28,7 +28,7 @@ const Profile = () => {
         try {
           //uses the roomNumber id to fetch the parent room id
           const roomTypeId = await Promise.all(
-            roomIds.map((roomId) => axios.get(`/rooms/roomType/${roomId}`))
+            roomIds.map((roomId) => axios.get(`https://notbooking.onrender.com/api/rooms/roomType/${roomId}`))
           );
 
           //maps throught the response to have a new array with only the ids as strings
@@ -51,7 +51,7 @@ const Profile = () => {
 
           //with the new array of ids, get the room info and set it in state to use it in the card later
           const roomTypes = await Promise.all(
-            uniqueRoomIds.map((response) => axios.get(`/rooms/${response}`))
+            uniqueRoomIds.map((response) => axios.get(`https://notbooking.onrender.com/api/rooms/${response}`))
           );
           setRoomTypeData(roomTypes.map((response) => response.data));
           setDataFetched(true);
@@ -91,7 +91,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await axios.put(`/users/${user._id}`, updatedUser);
+      const response = await axios.put(`https://notbooking.onrender.com/api/users/${user._id}`, updatedUser);
       setUser(response.data);
 
       setUpdateCard(false);
@@ -102,7 +102,7 @@ const Profile = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/users/${user._id}`);
+      await axios.delete(`https://notbooking.onrender.com/api/users/${user._id}`);
     } catch (error) {
       console.log(error);
     }

@@ -6,7 +6,7 @@ import { SearchContext } from '../../context/searchContext';
 import axios from 'axios';
 
 const BookRooms = ({ setOpenRooms, hotelId }) => {
-  const { data, loading, error } = useFetch(`/hotels/room/${hotelId}`);
+  const { data, loading, error } = useFetch(`https://notbooking.onrender.com/hotels/room/${hotelId}`);
   const { dates } = useContext(SearchContext);
   const [selectedRooms, setSelectedRooms] = useState([]);
   const userInfo = JSON.parse(localStorage.getItem('user'));
@@ -65,18 +65,18 @@ const BookRooms = ({ setOpenRooms, hotelId }) => {
     try {
       await Promise.all(
         selectedRooms.map((roomId) => {
-          const res = axios.put(`/rooms/availability/${roomId}`, {
+          const res = axios.put(`https://notbooking.onrender.com/rooms/availability/${roomId}`, {
             dates: dateRange,
           });
           return res.data;
         })
       );
 
-      await axios.put(`/users/reserved/${userId}`, {
+      await axios.put(`https://notbooking.onrender.com/users/reserved/${userId}`, {
         roomNumber: selectedRooms,
       });
 
-      const updatedUser = await axios.get(`/users/${userId}`);
+      const updatedUser = await axios.get(`https://notbooking.onrender.com/users/${userId}`);
       localStorage.setItem('user', JSON.stringify(updatedUser.data));
 
       setOpenRooms(false);

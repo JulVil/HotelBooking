@@ -1,9 +1,10 @@
 import './hotelList.scss';
 import Navbar from '../../components/navbar/Navbar';
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { format } from 'date-fns';
 import { DateRange } from 'react-date-range';
+import { SearchContext } from '../../context/searchContext';
 import SearchItem from '../../components/searchItem/SearchItem';
 import useFetch from '../../hooks/useFetch';
 
@@ -17,8 +18,12 @@ const List = () => {
   const [min, setMin] = useState(undefined);
   const [max, setMax] = useState(undefined);
 
+  const { dispatch } = useContext(SearchContext);
+
   const { data, loading, error, reFetch } = useFetch(
-    `/hotels?city=${destination}&min=${min || 0}&max=${max || 999}`
+    `https://notbooking.onrender.com/hotels?city=${destination}&min=${
+      min || 0
+    }&max=${max || 999}`
   );
 
   const handleOptionCounter = (name, operation) => {
@@ -34,6 +39,11 @@ const List = () => {
   };
 
   const handleListSearch = () => {
+    dispatch({
+      type: 'NEW_SEARCH',
+      payload: { destination, dates, options: guestOptions },
+    });
+
     reFetch();
   };
 

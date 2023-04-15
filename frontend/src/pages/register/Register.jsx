@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/authContext';
 import './register.scss';
 
@@ -21,12 +21,15 @@ const Register = () => {
       [event.target.id]: event.target.value,
     }));
   };
-  
+
   const handleRegister = async (event) => {
     event.preventDefault();
     dispatch({ type: 'LOGIN_START' });
     try {
-      const res = await axios.post('/authentication/register', credentials);
+      const res = await axios.post(
+        'https://notbooking.onrender.com/authentication/register',
+        credentials
+      );
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
       if (window.history.state && window.history.state.idx > 0) {
         navigate(-1);
@@ -39,6 +42,10 @@ const Register = () => {
     }
   };
 
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') handleRegister(event);
   };
@@ -46,9 +53,14 @@ const Register = () => {
   return (
     <div className='register'>
       <div className='registerContainer'>
-        <h1 className='logo'>NOTBOOKING</h1>
+        <Link to={'/'} style={{ color: 'inherit', textDecoration: 'none' }}>
+          <h1 className='logo'>NOTBOOKING</h1>
+        </Link>
         <div className='registerCard'>
-          <h2>Create a free account</h2>
+          <h2>
+            Create a free account <br />
+            Or click the logo to go back
+          </h2>
           <input
             type='text'
             className='registerInput'
@@ -78,6 +90,12 @@ const Register = () => {
             onClick={handleRegister}
             className='registerButton'>
             Register
+          </button>
+          <button
+            disabled={loading}
+            onClick={handleLogin}
+            className='registerButton'>
+            Login
           </button>
           {error && <span>{error.message}</span>}
         </div>

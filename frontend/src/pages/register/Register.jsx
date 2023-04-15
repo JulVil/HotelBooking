@@ -26,7 +26,7 @@ const Register = () => {
     event.preventDefault();
     dispatch({ type: 'LOGIN_START' });
     try {
-      const res = await axios.post('https://notbooking.onrender.com/authentication/register', credentials);
+      const res = await axios.post('/authentication/register', credentials);
       dispatch({ type: 'LOGIN_SUCCESS', payload: res.data });
       if (window.history.state && window.history.state.idx > 0) {
         navigate(-1);

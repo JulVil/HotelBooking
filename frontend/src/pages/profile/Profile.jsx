@@ -8,11 +8,13 @@ const Profile = () => {
   const roomIds = user.roomNumber;
   const [roomTypeData, setRoomTypeData] = useState([]);
   const joinedDate = user?.createdAt?.substring(0, 10);
+
   const [dataFetched, setDataFetched] = useState(false);
   const [roomCard, setRoomCard] = useState(false);
   const [roomMessage, setRoomMessage] = useState(true);
   const [updateCard, setUpdateCard] = useState(false);
   const [deleteCard, setDeleteCard] = useState(false);
+
   const navigate = useNavigate();
 
   const [updateUsername, setUpdateUsername] = useState('');
@@ -28,7 +30,7 @@ const Profile = () => {
         try {
           //uses the roomNumber id to fetch the parent room id
           const roomTypeId = await Promise.all(
-            roomIds.map((roomId) => axios.get(`https://notbooking.onrender.com/rooms/roomType/${roomId}`))
+            roomIds.map((roomId) => axios.get(`/rooms/roomType/${roomId}`))
           );
 
           //maps throught the response to have a new array with only the ids as strings
@@ -51,7 +53,7 @@ const Profile = () => {
 
           //with the new array of ids, get the room info and set it in state to use it in the card later
           const roomTypes = await Promise.all(
-            uniqueRoomIds.map((response) => axios.get(`https://notbooking.onrender.com/rooms/${response}`))
+            uniqueRoomIds.map((response) => axios.get(`/rooms/${response}`))
           );
           setRoomTypeData(roomTypes.map((response) => response.data));
           setDataFetched(true);
@@ -91,10 +93,15 @@ const Profile = () => {
     }
 
     try {
-      const response = await axios.put(`https://notbooking.onrender.com/users/${user._id}`, updatedUser);
+      const response = await axios.put(`/users/${user._id}`, updatedUser);
       setUser(response.data);
 
       setUpdateCard(false);
+
+      if (dataFetched) {
+        setRoomMessage(false);
+        setRoomCard(true);
+      } else setRoomMessage(true);
     } catch (error) {
       console.log(error);
     }
@@ -102,7 +109,7 @@ const Profile = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://notbooking.onrender.com/users/${user._id}`);
+      await axios.delete(`/users/${user._id}`);
     } catch (error) {
       console.log(error);
     }
@@ -113,15 +120,29 @@ const Profile = () => {
   const cancelUpdate = () => {
     setDeleteCard(false);
     setUpdateCard(false);
-    if (!roomCard) setRoomMessage(true);
-    else setRoomCard(true);
+    if (dataFetched) {
+      setRoomMessage(false);
+      setRoomCard(true);
+    } else setRoomMessage(true);
   };
 
   const cancelDelete = () => {
     setUpdateCard(false);
     setDeleteCard(false);
-    if (!roomCard) setRoomMessage(true);
-    else setRoomCard(true);
+    if (dataFetched) {
+      setRoomMessage(false);
+      setRoomCard(true);
+    } else setRoomMessage(true);
+  };
+
+  const handleKeyPress = (event) => {
+    const keyCode = event.keyCode || event.which;
+    const keyValue = String.fromCharCode(keyCode);
+
+    // Allow only numbers
+    if (!/^\d+$/.test(keyValue)) {
+      event.preventDefault();
+    }
   };
 
   const handleNavigate = () => {
@@ -213,6 +234,7 @@ const Profile = () => {
               <input
                 type='tel'
                 maxLength={9}
+                onKeyDown={handleKeyPress}
                 onChange={(event) => setUpdatePhone(event.target.value)}
                 placeholder={user.phone}
               />

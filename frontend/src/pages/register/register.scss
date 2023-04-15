@@ -9,14 +9,14 @@
     text-align: center;
 
     .registerCard {
-      color: #588585;
+      color: var(--button-color);
       display: flex;
       flex-direction: column;
       gap: 10px;
       border-radius: 5px;
-      border: 1px solid #decba4;
+      border: 1px solid var(--secondary-color);
       padding: 20px;
-      background-color: #efdab1b1;
+      background-color: var(--login-background);
       text-align: center;
 
       .registerInput {
@@ -26,8 +26,8 @@
 
       .registerButton {
         padding: 10px 20px;
-        color: #fff;
-        background-color: #588585;
+        color: var(--text-color);
+        background-color: var(--button-color);
         font-weight: bold;
         border: none;
         border-radius: 5px;
@@ -35,7 +35,7 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #6ba3a3;
+          background-color: var(--button-action-color);
         }
 
         &:active {
@@ -43,7 +43,7 @@
         }
 
         &:disabled {
-          background-color: #3e5151;
+          background-color: var(--primary-color);
           cursor: not-allowed;
         }
       }

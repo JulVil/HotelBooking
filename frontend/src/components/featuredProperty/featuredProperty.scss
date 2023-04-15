@@ -37,8 +37,8 @@
       font-size: 14px;
 
       & div {
-        color: #fff;
-        background-color: #588585;
+        color: var(--text-color);
+        background-color: var(--button-color);
         border: none;
         border-radius: 5px;
         padding: 3px;

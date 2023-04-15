@@ -11,8 +11,7 @@ const BookRooms = ({ setOpenRooms, hotelId }) => {
   const [selectedRooms, setSelectedRooms] = useState([]);
   const userInfo = JSON.parse(localStorage.getItem('user'));
   const userId = userInfo._id;
-
-  console.log(userId);
+  
   //uses the room id when a box is checked in seleceted rooms to know which ones will be unavailable
   const handleSelected = (event) => {
     const available = event.target.checked;

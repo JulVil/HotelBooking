@@ -5,11 +5,19 @@ import FlightIcon from '@mui/icons-material/Flight';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import AttractionsIcon from '@mui/icons-material/Attractions';
 import LocalTaxiIcon from '@mui/icons-material/LocalTaxi';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/authContext';
 
 const Navbar = () => {
   const { user } = useContext(AuthContext);
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      const updatedUser = JSON.parse(localStorage.getItem('user'));
+      if (updatedUser) setUsername(updatedUser.username);
+    }
+  }, [user]);
 
   const navigate = useNavigate();
 
@@ -23,7 +31,7 @@ const Navbar = () => {
 
   const handleProfile = () => {
     navigate('/profile');
-  }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('user');
@@ -38,9 +46,9 @@ const Navbar = () => {
             <Link to={'/'} style={{ color: 'inherit', textDecoration: 'none' }}>
               <span className='logo'>NOTBOOKING</span>
             </Link>
-            {user ? (
+            {username ? (
               <div className='user'>
-                <span>{user.username}</span>
+                <span>{username}</span>
                 <button className='userButton' onClick={handleProfile}>
                   Profile
                 </button>

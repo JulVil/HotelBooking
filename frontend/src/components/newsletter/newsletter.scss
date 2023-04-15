@@ -1,8 +1,12 @@
 .newsletter {
   width: 100%;
   margin-top: 50px;
-  background: linear-gradient(to right, #3e5151, #decba4);
-  color: #fff;
+  background: linear-gradient(
+    to right,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: var(--text-color);
 
   .newsletterContainer {
     display: flex;
@@ -34,8 +38,8 @@
       & button {
         width: 30%;
         height: 50px;
-        background-color: #588585;
-        color: #fff;
+        background-color: var(--button-color);
+        color: var(--text-color);
         font-weight: 500;
         border: none;
         border-radius: 5px;
@@ -43,7 +47,7 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #6ba3a3;
+          background-color: var(--button-action-color);
         }
 
         &:active {

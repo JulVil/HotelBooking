@@ -44,7 +44,7 @@ const Footer = () => {
           <li>Terms & conditions</li>
         </ul>
       </div>
-      <div className='footerText'>Copyright © 2023 Logo.</div>
+      <div className='footerText'>Copyright © 2023 NOTBOOKING.</div>
     </div>
   );
 };

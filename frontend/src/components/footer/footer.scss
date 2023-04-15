@@ -15,11 +15,11 @@
 
       & li {
         margin-bottom: 10px;
-        color: #588585;
+        color: var(--button-color);
         cursor: pointer;
 
         &:hover {
-          color: #decba4;
+          color: var(--secondary-color);
         }
       }
     }

@@ -1,5 +1,5 @@
 .searchResultItem {
-  border: 1px solid #3e5151;
+  border: 1px solid var(--primary-color);
   padding: 10px;
   border-radius: 5px;
   display: flex;
@@ -21,7 +21,7 @@
 
     & h1 {
       font-size: 20px;
-      color: #588585;
+      color: var(--button-color);
     }
 
     .searchResultDistance {
@@ -30,8 +30,8 @@
 
     .searchResultTaxi {
       font-size: 12px;
-      background-color: #008009;
-      color: #fff;
+      background-color: var(--secondary-text-color);
+      color: var(--text-color);
       width: max-content;
       padding: 3px;
       border-radius: 5px;
@@ -48,13 +48,13 @@
 
     .searchResultCancel {
       font-size: 12px;
-      color: #008009;
+      color: var(--secondary-text-color);
       font-weight: bold;
     }
 
     .searchResultCancelSubtitle {
       font-size: 12px;
-      color: #008009;
+      color: var(--secondary-text-color);
     }
   }
 
@@ -74,8 +74,8 @@
       }
 
       & div {
-        color: #fff;
-        background-color: #588585;
+        color: var(--text-color);
+        background-color: var(--button-color);
         border: none;
         border-radius: 5px;
         padding: 3px;
@@ -100,8 +100,8 @@
       }
 
       & button {
-        background-color: #588585;
-        color: #fff;
+        background-color: var(--button-color);
+        color: var(--text-color);
         font-weight: bold;
         padding: 10px 5px;
         border: none;
@@ -110,7 +110,7 @@
         cursor: pointer;
 
         &:hover {
-          background-color: #6ba3a3;
+          background-color: var(--button-action-color);
         }
 
         &:active {

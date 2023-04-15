@@ -1,16 +1,25 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-// import useFetch from '../../hooks/useFetch';
 import './profile.scss';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
   const roomIds = user.roomNumber;
   const [roomTypeData, setRoomTypeData] = useState([]);
   const joinedDate = user?.createdAt?.substring(0, 10);
   const [dataFetched, setDataFetched] = useState(false);
+  const [roomCard, setRoomCard] = useState(false);
+  const [roomMessage, setRoomMessage] = useState(true);
+  const [updateCard, setUpdateCard] = useState(false);
+  const [deleteCard, setDeleteCard] = useState(false);
   const navigate = useNavigate();
+
+  const [updateUsername, setUpdateUsername] = useState('');
+  const [updateEmail, setUpdateEmail] = useState('');
+  const [updateCountry, setUpdateCountry] = useState('');
+  const [updateCity, setUpdateCity] = useState('');
+  const [updatePhone, setUpdatePhone] = useState('');
 
   useEffect(() => {
     //check if the user has rooms reserved and if the data as already been fetched
@@ -31,7 +40,7 @@ const Profile = () => {
           const uniqueRoomIds = [];
 
           //loop throught the id array of strings, check if the id is included in the new array
-          //if it's not, push it to the uniqueRoomId, if it already exists, don't add it 
+          //if it's not, push it to the uniqueRoomId, if it already exists, don't add it
           mainRoomIds.forEach((roomId) => {
             const isNewId = !uniqueRoomIds.includes(roomId);
 
@@ -46,6 +55,8 @@ const Profile = () => {
           );
           setRoomTypeData(roomTypes.map((response) => response.data));
           setDataFetched(true);
+          setRoomCard(true);
+          setRoomMessage(false);
         } catch (error) {
           console.log(error);
         }
@@ -55,59 +66,223 @@ const Profile = () => {
     }
   }, [roomIds, dataFetched]);
 
+  const handleUpdate = async () => {
+    const updatedUser = {};
+
+    // Check which fields the user wants to update
+    if (updateUsername !== '') {
+      updatedUser.username = updateUsername;
+    }
+
+    if (updateEmail !== '') {
+      updatedUser.email = updateEmail;
+    }
+
+    if (updateCountry !== '') {
+      updatedUser.country = updateCountry;
+    }
+
+    if (updateCity !== '') {
+      updatedUser.city = updateCity;
+    }
+
+    if (updatePhone !== '') {
+      updatedUser.phone = updatePhone;
+    }
+
+    try {
+      const response = await axios.put(`/users/${user._id}`, updatedUser);
+      setUser(response.data);
+
+      setUpdateCard(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`/users/${user._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+    localStorage.removeItem('user');
+    navigate('/');
+  };
+
+  const cancelUpdate = () => {
+    setDeleteCard(false);
+    setUpdateCard(false);
+    if (!roomCard) setRoomMessage(true);
+    else setRoomCard(true);
+  };
+
+  const cancelDelete = () => {
+    setUpdateCard(false);
+    setDeleteCard(false);
+    if (!roomCard) setRoomMessage(true);
+    else setRoomCard(true);
+  };
+
   const handleNavigate = () => {
+    localStorage.setItem('user', JSON.stringify(user));
     navigate(-1);
   };
 
   return (
     <div className='profile'>
       <div className='profileContainer'>
-        <div className='profileCard'>
-          <h1 className='userInfo'>Your account information</h1>
-          <span className='username'>
-            <u>Username:</u> {user.username}
-          </span>
-          <span className='email'>
-            <u>Email:</u> {user.email}
-          </span>
-          <span className='created'>
-            <u>Joined:</u> {joinedDate}
-          </span>
-          <span className='country'>
-            <u>Country:</u>{' '}
-          </span>
-          <span className='city'>
-            <u>City:</u>{' '}
-          </span>
-          <span className='phone'>
-            <u>Phone:</u>{' '}
-          </span>
+        <div className='optionButtons'>
+          <button
+            className='profileButton'
+            onClick={() => {
+              setUpdateCard(true);
+              setDeleteCard(false);
+              setRoomCard(false);
+              setRoomMessage(false);
+            }}>
+            Update Info
+          </button>
+          <button
+            className='profileButton'
+            onClick={() => {
+              setDeleteCard(true);
+              setUpdateCard(false);
+              setRoomMessage(false);
+              setRoomCard(false);
+            }}>
+            Delete Profile
+          </button>
+          <button className='profileButton' onClick={handleNavigate}>
+            Back
+          </button>
         </div>
-        <button className='backButton' onClick={handleNavigate}>
-          Back
-        </button>
-        {roomTypeData.length ? (
+        {deleteCard ? (
+          <div className='deleteCard'>
+            <div className='deleteMessage'>
+              <h1>
+                Are you sure you want to delete your account?
+                <br />
+                All information will be lost.
+              </h1>
+            </div>
+            <div className='deleteButtons'>
+              <button onClick={handleDelete}>Delete</button>
+              <button onClick={cancelDelete}>Cancel</button>
+            </div>
+          </div>
+        ) : updateCard ? (
+          <div className='updateCard'>
+            <h1 className='userInfo'>
+              Please fill in the missing <br /> information
+            </h1>
+            <div className='nameAndField'>
+              <span>Username:</span>
+              <input
+                type='text'
+                onChange={(event) => setUpdateUsername(event.target.value)}
+                placeholder={user.username}
+              />
+            </div>
+            <div className='nameAndField'>
+              <span>Email:</span>
+              <input
+                type='email'
+                onChange={(event) => setUpdateEmail(event.target.value)}
+                placeholder={user.email}
+              />
+            </div>
+            <div className='nameAndField'>
+              <span>Country:</span>
+              <input
+                type='text'
+                onChange={(event) => setUpdateCountry(event.target.value)}
+                placeholder={user.country}
+              />
+            </div>
+            <div className='nameAndField'>
+              <span>City:</span>
+              <input
+                type='text'
+                onChange={(event) => setUpdateCity(event.target.value)}
+                placeholder={user.city}
+              />
+            </div>
+            <div className='nameAndField'>
+              <span>Phone:</span>
+              <input
+                type='tel'
+                maxLength={9}
+                onChange={(event) => setUpdatePhone(event.target.value)}
+                placeholder={user.phone}
+              />
+            </div>
+            <div className='updateButtons'>
+              <button onClick={handleUpdate}>Accept</button>
+              <button onClick={cancelUpdate}>Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <div className='profileCard'>
+            <h1 className='userInfo'>Your account information</h1>
+            <div className='nameAndField'>
+              <span>Username:</span>
+              <span>{user.username}</span>
+            </div>
+            <div className='nameAndField'>
+              <span>Email:</span>
+              <span>{user.email}</span>
+            </div>
+            <div className='nameAndField'>
+              <span>Joined:</span>
+              <span>{joinedDate}</span>
+            </div>
+            <div className='nameAndField'>
+              <span>Country:</span>
+              <span>{user.country}</span>
+            </div>
+            <div className='nameAndField'>
+              <span>City:</span>
+              <span>{user.city}</span>
+            </div>
+            <div className='nameAndField'>
+              <span>Phone:</span>
+              <span>{user.phone}</span>
+            </div>
+          </div>
+        )}
+        {roomCard ? (
           <div className='roomsCard'>
             <h1 className='reservedRooms'>Your reserved rooms</h1>
             {roomTypeData.map((roomType) => (
               <div className='roomInfo' key={roomType._id}>
-                <span className='roomTitle'>
-                  <u>Room type:</u> {roomType.title}
-                </span>
-                <span className='roomDescription'>
-                  <u>Room description:</u> {roomType.description}
-                </span>
-                <span className='roomMaxPeople'>
-                  <u>Max People:</u> {roomType.maxPeople}
-                </span>
-                <span className='roomPrice'>
-                  <u>Price:</u> {roomType.price}
-                </span>
+                <div className='nameAndField'>
+                  <span>Room type:</span>
+                  <span>{roomType.title}</span>
+                </div>
+                <div className='nameAndField'>
+                  <span>Room description:</span>
+                  <span style={{ whiteSpace: 'pre-line' }}>
+                    {roomType.description}
+                  </span>
+                </div>
+                <div className='nameAndField'>
+                  <span>Max People:</span>
+                  <span>{roomType.maxPeople}</span>
+                </div>
+                <div className='nameAndField'>
+                  <span>Price:</span>
+                  <span>{roomType.price}</span>
+                </div>
+                <br />
+                <br />
               </div>
             ))}
           </div>
+        ) : roomMessage ? (
+          <div className='roomMessage'>{`You don't have any rooms reserved!`}</div>
         ) : (
-          <div>{`You don't have any rooms reserved!`}</div>
+          <></>
         )}
       </div>
     </div>

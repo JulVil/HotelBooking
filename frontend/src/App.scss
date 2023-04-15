@@ -9,3 +9,23 @@
 body {
   margin: 0;
 }
+
+/* Variables */
+
+:root {
+  /* Colors and backgrounds */
+  --text-color: #fff;
+  --secondary-text-color: #008009;
+  --primary-color: #3e5151;
+  --secondary-color: #decba4;
+  --navbar-list-hover-color: #8b8a8a;
+  --input-text-color: #8d8d8d;
+  --search-text-color: #a8a8a8;
+  --login-background: #efdab1b1;
+
+  /* Buttons */
+  --button-color: #588585;
+  --button-action-color: #6ba3a3;
+  --search-button-color: #decba4;
+  --search-action-color: #debb75;
+}

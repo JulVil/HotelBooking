@@ -1,7 +1,7 @@
 .bookRooms {
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #000000c1;
   position: fixed;
   top: 0;
   left: 0;
@@ -84,6 +84,12 @@
       &:active {
         transform: translateY(1px);
       }
+    }
+
+    .infoMessage {
+      padding-top: 20px;
+      font-size: 20px;
+      text-align: center;
     }
   }
 }

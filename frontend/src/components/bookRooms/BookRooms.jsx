@@ -3,15 +3,20 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import useFetch from '../../hooks/useFetch';
 import { useContext, useState, useEffect } from 'react';
 import { SearchContext } from '../../context/searchContext';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const BookRooms = ({ setOpenRooms, hotelId }) => {
-  const { data, loading, error } = useFetch(`https://notbooking.onrender.com/hotels/room/${hotelId}`);
+  const { data, loading, error } = useFetch(
+    `https://notbooking.onrender.com/hotels/room/${hotelId}`
+  );
   const { dates } = useContext(SearchContext);
+  const navigate = useNavigate();
   const [selectedRooms, setSelectedRooms] = useState([]);
+  const [showMessage, setShowMessage] = useState(false);
   const userInfo = JSON.parse(localStorage.getItem('user'));
-  const userId = userInfo._id;
-  
+  const userId = userInfo ? userInfo._id : null;
+
   //uses the room id when a box is checked in seleceted rooms to know which ones will be unavailable
   const handleSelected = (event) => {
     const available = event.target.checked;
@@ -50,8 +55,12 @@ const BookRooms = ({ setOpenRooms, hotelId }) => {
   const dateRange = RangeOfDates(dates[0].startDate, dates[0].endDate);
 
   useEffect(() => {
+    if (!userId) {
+      // Redirect the user to the login page or display an error message
+      navigate('/login');
+    }
     localStorage.setItem('dateRange', JSON.stringify(dateRange));
-  }, [dateRange]);
+  }, [dateRange, navigate, userId]);
 
   const roomAvailability = (roomNumber) => {
     const isReserved = roomNumber.unavailableDates.some((date) =>
@@ -65,21 +74,30 @@ const BookRooms = ({ setOpenRooms, hotelId }) => {
     try {
       await Promise.all(
         selectedRooms.map((roomId) => {
-          const res = axios.put(`https://notbooking.onrender.com/rooms/availability/${roomId}`, {
-            dates: dateRange,
-          });
+          const res = axios.put(
+            `https://notbooking.onrender.com/rooms/availability/${roomId}`,
+            {
+              dates: dateRange,
+            }
+          );
           return res.data;
         })
       );
 
-      await axios.put(`https://notbooking.onrender.com/users/reserved/${userId}`, {
-        roomNumber: selectedRooms,
-      });
+      await axios.put(
+        `https://notbooking.onrender.com/users/reserved/${userId}`,
+        {
+          roomNumber: selectedRooms,
+        }
+      );
 
-      const updatedUser = await axios.get(`https://notbooking.onrender.com/users/${userId}`);
+      const updatedUser = await axios.get(
+        `https://notbooking.onrender.com/users/${userId}`
+      );
       localStorage.setItem('user', JSON.stringify(updatedUser.data));
 
-      setOpenRooms(false);
+      setShowMessage(true);
+      setTimeout(() => setOpenRooms(false), 4000);
     } catch (error) {
       console.log(error);
     }
@@ -87,7 +105,7 @@ const BookRooms = ({ setOpenRooms, hotelId }) => {
 
   return (
     <div>
-      {loading ? (
+      {userId && loading ? (
         'Loading, please wait'
       ) : error ? (
         (console.log(error), `Can't get room info, please try again later`)
@@ -127,6 +145,7 @@ const BookRooms = ({ setOpenRooms, hotelId }) => {
             <button className='reserveButton' onClick={handleReserve}>
               Reserve Now!
             </button>
+            {showMessage && <div className='infoMessage'>Rooms reserved, thank you!<br/>Room info is in your profile</div>}
           </div>
         </div>
       )}

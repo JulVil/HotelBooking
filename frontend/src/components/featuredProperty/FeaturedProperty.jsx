@@ -25,7 +25,7 @@ const FeaturedProperty = () => {
               <span className='price'>Starting from ${item.cheapestPrice}</span>
               {item.rating && (
                 <div className='featuredPropertyRating'>
-                  <div>{item.rating}</div>
+                  <div>{item.rating.$numberDecimal}</div>
                   <span>Excellent</span>
                 </div>
               )}

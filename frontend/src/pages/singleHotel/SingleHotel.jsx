@@ -8,43 +8,22 @@ import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
 import CancelIcon from '@mui/icons-material/Cancel';
 import useFetch from '../../hooks/useFetch';
 import { useContext, useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { SearchContext } from '../../context/searchContext';
 import { AuthContext } from '../../context/authContext';
 import BookRooms from '../../components/bookRooms/BookRooms';
-
-const photos = [
-  {
-    src: 'https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707778.jpg?k=56ba0babbcbbfeb3d3e911728831dcbc390ed2cb16c51d88159f82bf751d04c6&o=&hp=1',
-  },
-  {
-    src: 'https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707367.jpg?k=cbacfdeb8404af56a1a94812575d96f6b80f6740fd491d02c6fc3912a16d8757&o=&hp=1',
-  },
-  {
-    src: 'https://cf.bstatic.com/xdata/images/hotel/max1280x900/261708745.jpg?k=1aae4678d645c63e0d90cdae8127b15f1e3232d4739bdf387a6578dc3b14bdfd&o=&hp=1',
-  },
-  {
-    src: 'https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707776.jpg?k=054bb3e27c9e58d3bb1110349eb5e6e24dacd53fbb0316b9e2519b2bf3c520ae&o=&hp=1',
-  },
-  {
-    src: 'https://cf.bstatic.com/xdata/images/hotel/max1280x900/261708693.jpg?k=ea210b4fa329fe302eab55dd9818c0571afba2abd2225ca3a36457f9afa74e94&o=&hp=1',
-  },
-  {
-    src: 'https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707389.jpg?k=52156673f9eb6d5d99d3eed9386491a0465ce6f3b995f005ac71abc192dd5827&o=&hp=1',
-  },
-];
 
 const HotelSingle = () => {
   const [slideIndex, setSlideIndex] = useState(0);
   const [openSlider, setOpenSlider] = useState(false);
   const [openRooms, setOpenRooms] = useState(false);
-  const location = useLocation();
-  const id = location.pathname.split('/')[2];
+  const { id } = useParams();
   const navigate = useNavigate();
-
   const { user } = useContext(AuthContext);
   const { dates, options } = useContext(SearchContext);
-  const { data, loading, error } = useFetch(`https://notbooking.onrender.com/hotels/find/${id}`);
+  const { data, loading, error } = useFetch(
+    `https://notbooking.onrender.com/hotels/find/${id}`
+  );
 
   const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
   const stayDays = dayDifference(dates[0]?.endDate, dates[0]?.startDate);
@@ -75,7 +54,7 @@ const HotelSingle = () => {
 
   const handleSliderMove = (direction) => {
     let newSlideIndex;
-    let lastSlide = photos.length - 1;
+    let lastSlide = data.photos.length - 1;
 
     if (direction === 'left') {
       newSlideIndex = slideIndex === 0 ? lastSlide : slideIndex - 1;
@@ -157,13 +136,26 @@ const HotelSingle = () => {
             <div className='singleHotelDetails'>
               <div className='singleHotelDetailsTexts'>
                 <h1 className='singleHotelTitle'>{data.title}</h1>
-                <p className='singleHotelDescription'>{data.description}</p>
+                {/* This regular expression uses negative lookbehind (?<!) and negative lookahead (?!) assertions 
+                to match periods that are not part of an abbreviation.
+                 Specifically, it matches a period that is not preceded by a word boundary and a capital letter 
+                 followed by one or two lowercase letters 
+                 (which should match most common abbreviations), and not followed by a space and a lowercase letter. */}
+                {data?.description &&
+                  data.description
+                    .split(/(?<!\b[A-Z][a-z]{1,2})\.(?!\s[a-z])/)
+                    .map((sentence, index) => (
+                      <p key={index} className='singleHotelDescription'>
+                        {sentence}.
+                      </p>
+                    ))}
               </div>
               <div className='singleHotelDetailsPrice'>
                 <h1>Perfect for a {stayDays}-night stay!</h1>
                 <span>
                   located in the real heart of {data.city}, this property has an
-                  excellent location score of 9.8!
+                  excellent location score of{' '}
+                  <b>{data.rating?.$numberDecimal}</b>!
                 </span>
                 <h2>
                   <b>${stayDays * data.cheapestPrice * options.room}</b> (

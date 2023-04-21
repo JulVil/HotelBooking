@@ -135,16 +135,6 @@ const Profile = () => {
     } else setRoomMessage(true);
   };
 
-  const handleKeyPress = (event) => {
-    const keyCode = event.keyCode || event.which;
-    const keyValue = String.fromCharCode(keyCode);
-
-    // Allow only numbers
-    if (!/^\d+$/.test(keyValue)) {
-      event.preventDefault();
-    }
-  };
-
   const handleNavigate = () => {
     localStorage.setItem('user', JSON.stringify(user));
     navigate(-1);
@@ -233,8 +223,7 @@ const Profile = () => {
               <span>Phone:</span>
               <input
                 type='tel'
-                maxLength={9}
-                onKeyDown={handleKeyPress}
+                maxLength={15}
                 onChange={(event) => setUpdatePhone(event.target.value)}
                 placeholder={user.phone}
               />

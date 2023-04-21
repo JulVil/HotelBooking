@@ -11,10 +11,7 @@ const SearchItem = ({ item }) => {
           {item.distance}m from center
         </span>
         <span className='searchResultTaxi'>Free airport taxi</span>
-        <span className='searchResultSubtitle'>
-          Studio Apartment with Air conditioning
-        </span>
-        <span className='searchResultFeatures'>{item.description}</span>
+        <span className='searchResultFeatures'>{item.description.substring(0, item.description.indexOf('.') + 1)}..</span>
         <span className='searchResultCancel'>Free cancellation </span>
         <span className='searchResultCancelSubtitle'>
           You can cancel later, so lock in this great price today!
@@ -24,7 +21,7 @@ const SearchItem = ({ item }) => {
         {item.rating && (
           <div className='searchResultRating'>
             <span>Excellent</span>
-            <div>{item.rating}</div>
+            <div>{item.rating.$numberDecimal}</div>
           </div>
         )}
         <div className='searchResultDetailTexts'>

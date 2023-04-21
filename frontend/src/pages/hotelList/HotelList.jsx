@@ -26,6 +26,14 @@ const List = () => {
     }&max=${max || 999}`
   );
 
+  const handleInputChange = (event) => {
+    const inputText = event.target.value;
+    const uppercaseSearch =
+      inputText.charAt(0).toUpperCase() + inputText.slice(1);
+
+    setDestination(uppercaseSearch);
+  };
+
   const handleOptionCounter = (name, operation) => {
     setGuestOptions((previous) => {
       return {
@@ -60,7 +68,7 @@ const List = () => {
                 id='searchInput'
                 type='text'
                 placeholder={destination}
-                onChange={(event) => setDestination(event.target.value)}
+                onChange={handleInputChange}
               />
             </div>
             <div className='searchItem'>

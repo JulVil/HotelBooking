@@ -44,7 +44,11 @@ const Header = () => {
   };
 
   const handleInputChange = (event) => {
-    setDestination(event.target.value);
+    const inputText = event.target.value;
+    const uppercaseSearch =
+      inputText.charAt(0).toUpperCase() + inputText.slice(1);
+
+    setDestination(uppercaseSearch);
   };
 
   const handleSearch = () => {

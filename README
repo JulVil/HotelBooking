@@ -2,6 +2,8 @@
 
 Welcome to the [NotBooking App](https://notbooking.julianvilalta.com/) project! This web application aims to replicate some of the key features of booking.com. Users can search for destinations, select dates, and book rooms from a list of available options. The project is built using various technologies to ensure smooth functionality and security. Let's dive into the project and the techs used.
 
+![Demo](https://github.com/JulVil/HotelBooking/blob/master/.github/demo.gif)
+
 ## Technologies Used
 
 #### Frontend

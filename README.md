@@ -38,6 +38,7 @@ The NotBooking App provides the following features:
 <img src="https://github.com/JulVil/HotelBooking/blob/master/.github/single.png" width=75% height=75%>
 <img src="https://github.com/JulVil/HotelBooking/blob/master/.github/rooms.png" width=75% height=75%>
 <img src="https://github.com/JulVil/HotelBooking/blob/master/.github/profile.png" width=75% height=75%>
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)

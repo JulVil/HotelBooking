@@ -3,7 +3,11 @@
   width: 100%;
   min-height: 100vh;
   color: #fff;
-  background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    to right,
+    var(--primary-color),
+    var(--secondary-color)
+  );
 
   .profileContainer {
     display: flex;
@@ -144,11 +148,15 @@
       padding: 20px;
       margin-bottom: 25px;
 
-      .nameAndField {
+      .roomNameAndField {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        gap: 5px;
         padding: 10px 0px;
+
+        .roomTitle {
+          text-decoration: underline;
+        }
       }
     }
   }

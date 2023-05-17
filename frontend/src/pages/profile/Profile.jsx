@@ -30,7 +30,11 @@ const Profile = () => {
         try {
           //uses the roomNumber id to fetch the parent room id
           const roomTypeId = await Promise.all(
-            roomIds.map((roomId) => axios.get(`https://notbooking.onrender.com/rooms/roomType/${roomId}`))
+            roomIds.map((roomId) =>
+              axios.get(
+                `https://notbooking.onrender.com/rooms/roomType/${roomId}`
+              )
+            )
           );
 
           //maps throught the response to have a new array with only the ids as strings
@@ -53,7 +57,9 @@ const Profile = () => {
 
           //with the new array of ids, get the room info and set it in state to use it in the card later
           const roomTypes = await Promise.all(
-            uniqueRoomIds.map((response) => axios.get(`https://notbooking.onrender.com/rooms/${response}`))
+            uniqueRoomIds.map((response) =>
+              axios.get(`https://notbooking.onrender.com/rooms/${response}`)
+            )
           );
           setRoomTypeData(roomTypes.map((response) => response.data));
           setDataFetched(true);
@@ -93,7 +99,10 @@ const Profile = () => {
     }
 
     try {
-      const response = await axios.put(`https://notbooking.onrender.com/users/${user._id}`, updatedUser);
+      const response = await axios.put(
+        `https://notbooking.onrender.com/users/${user._id}`,
+        updatedUser
+      );
       setUser(response.data);
 
       setUpdateCard(false);
@@ -267,22 +276,22 @@ const Profile = () => {
             <h1 className='reservedRooms'>Your reserved rooms</h1>
             {roomTypeData.map((roomType) => (
               <div className='roomInfo' key={roomType._id}>
-                <div className='nameAndField'>
-                  <span>Room type:</span>
+                <div className='roomNameAndField'>
+                  <span className='roomTitle'>Room type:</span>
                   <span>{roomType.title}</span>
                 </div>
-                <div className='nameAndField'>
-                  <span>Room description:</span>
+                <div className='roomNameAndField'>
+                  <span className='roomTitle'>Room description:</span>
                   <span style={{ whiteSpace: 'pre-line' }}>
                     {roomType.description}
                   </span>
                 </div>
-                <div className='nameAndField'>
-                  <span>Max People:</span>
+                <div className='roomNameAndField'>
+                  <span className='roomTitle'>Max People:</span>
                   <span>{roomType.maxPeople}</span>
                 </div>
-                <div className='nameAndField'>
-                  <span>Price:</span>
+                <div className='roomNameAndField'>
+                  <span className='roomTitle'>Price:</span>
                   <span>{roomType.price}</span>
                 </div>
                 <br />
